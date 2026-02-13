@@ -1,625 +1,149 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Catálogo AR - Componentes Eléctricos</title>
-
-    <!-- Librerías AR.js y A-Frame -->
-    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        /* Panel de información */
-        #info-panel {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: rgba(0, 0, 0, 0.95);
-            color: white;
-            padding: 25px;
-            border-radius: 15px;
-            display: none;
-            max-width: 650px;
-            margin: 0 auto;
-            z-index: 1000;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
-            max-height: 75vh;
-            overflow-y: auto;
-            backdrop-filter: blur(10px);
-        }
-
-        #info-panel.visible {
-            display: block;
-            animation: slideUp 0.3s ease-out;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        #info-panel h2 {
-            color: #4CAF50;
-            margin-top: 0;
-            margin-bottom: 15px;
-            border-bottom: 3px solid #4CAF50;
-            padding-bottom: 12px;
-            font-size: 26px;
-            font-weight: 600;
-        }
-
-        #info-panel p {
-            line-height: 1.8;
-            margin: 14px 0;
-            font-size: 15px;
-        }
-
-        #info-panel strong {
-            color: #4CAF50;
-            font-size: 16px;
-        }
-
-        /* Caja de fórmulas */
-        .formula {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 18px;
-            border-radius: 10px;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            margin: 18px 0;
-            font-size: 19px;
-            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
-            font-weight: 500;
-        }
-
-        /* Caja de especificaciones */
-        .specs-box {
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 5px solid #FF9800;
-            margin: 14px 0;
-            line-height: 2;
-        }
-
-        /* Caja de aplicaciones */
-        .apps-list {
-            background: #1a1a1a;
-            padding: 15px;
-            border-radius: 10px;
-            border-left: 5px solid #2196F3;
-            margin: 14px 0;
-            line-height: 2;
-        }
-
-        /* Botón cerrar */
-        #close-btn {
-            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
-            color: white;
-            border: none;
-            padding: 14px 24px;
-            border-radius: 10px;
-            cursor: pointer;
-            width: 100%;
-            font-size: 17px;
-            margin-top: 18px;
-            font-weight: bold;
-            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
-            transition: all 0.3s ease;
-        }
-
-        #close-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.6);
-        }
-
-        #close-btn:active {
-            transform: translateY(0);
-        }
-
-        /* Instrucciones superiores */
-        #instructions {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-            color: white;
-            padding: 16px 32px;
-            border-radius: 12px;
-            z-index: 999;
-            text-align: center;
-            font-weight: bold;
-            font-size: 15px;
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-
-            0%,
-            100% {
-                transform: translateX(-50%) scale(1);
-            }
-
-            50% {
-                transform: translateX(-50%) scale(1.05);
-            }
-        }
-
-        /* Scrollbar personalizado */
-        #info-panel::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #info-panel::-webkit-scrollbar-track {
-            background: #2a2a2a;
-            border-radius: 10px;
-        }
-
-        #info-panel::-webkit-scrollbar-thumb {
-            background: #4CAF50;
-            border-radius: 10px;
-        }
-
-        #info-panel::-webkit-scrollbar-thumb:hover {
-            background: #45a049;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            #info-panel {
-                bottom: 10px;
-                left: 10px;
-                right: 10px;
-                padding: 20px;
-                max-height: 65vh;
-            }
-
-            #info-panel h2 {
-                font-size: 22px;
-            }
-
-            #info-panel p {
-                font-size: 14px;
-            }
-
-            .formula {
-                font-size: 16px;
-                padding: 14px;
-            }
-
-            #instructions {
-                font-size: 13px;
-                padding: 12px 20px;
-                top: 10px;
-            }
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- Instrucciones -->
-    <div id="instructions">
-        📱 Apunta al marcador Hiro y toca los componentes para aprender
-    </div>
-
-    <!-- Escena A-Frame con AR.js -->
-    <a-scene embedded
-        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
-
-        <!-- Marcador Hiro -->
-        <a-marker preset="hiro">
-
-            <!-- RESISTENCIA -->
-            <a-entity position="-1.2 0 0">
-                <a-gltf-model id="resistencia" src="assets/models/resistencia.glb" position="0 0.15 0"
-                    scale="0.2 0.2 0.2" rotation="0 0 0" class="clickable" data-component="resistencia"
-                    animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
-                </a-gltf-model>
-                <a-text value="RESISTENCIA" position="0 -0.12 0" scale="0.22 0.22 0.22" align="center" color="#FFD700"
-                    font="roboto">
-                </a-text>
-                <a-text value="Limita corriente" position="0 -0.24 0" scale="0.14 0.14 0.14" align="center"
-                    color="#FFFFFF" font="roboto">
-                </a-text>
-            </a-entity>
-
-            <!-- CAPACITOR -->
-            <a-entity position="-0.6 0 0">
-                <a-gltf-model id="capacitor" src="assets/models/capacitor.glb" position="0 0.15 0" scale="0.2 0.2 0.2"
-                    rotation="0 0 0" class="clickable" data-component="capacitor"
-                    animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
-                </a-gltf-model>
-                <a-text value="CAPACITOR" position="0 -0.12 0" scale="0.22 0.22 0.22" align="center" color="#4169E1"
-                    font="roboto">
-                </a-text>
-                <a-text value="Almacena carga" position="0 -0.24 0" scale="0.14 0.14 0.14" align="center"
-                    color="#FFFFFF" font="roboto">
-                </a-text>
-            </a-entity>
-
-            <!-- LED -->
-            <a-entity position="0 0 0">
-                <a-gltf-model id="led" src="assets/models/led.glb" position="0 0.15 0" scale="0.2 0.2 0.2"
-                    rotation="0 0 0" class="clickable" data-component="led"
-                    animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
-                </a-gltf-model>
-                <a-text value="LED" position="0 -0.12 0" scale="0.22 0.22 0.22" align="center" color="#FF4444"
-                    font="roboto">
-                </a-text>
-                <a-text value="Emite luz" position="0 -0.24 0" scale="0.14 0.14 0.14" align="center" color="#FFFFFF"
-                    font="roboto">
-                </a-text>
-            </a-entity>
-
-            <!-- TRANSISTOR -->
-            <a-entity position="0.6 0 0">
-                <a-gltf-model id="transistor" src="assets/models/transistor.glb" position="0 0.15 0" scale="0.2 0.2 0.2"
-                    rotation="0 0 0" class="clickable" data-component="transistor"
-                    animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
-                </a-gltf-model>
-                <a-text value="TRANSISTOR" position="0 -0.12 0" scale="0.22 0.22 0.22" align="center" color="#2F4F4F"
-                    font="roboto">
-                </a-text>
-                <a-text value="Amplifica señal" position="0 -0.24 0" scale="0.14 0.14 0.14" align="center"
-                    color="#FFFFFF" font="roboto">
-                </a-text>
-            </a-entity>
-
-            <!-- BATERÍA -->
-            <a-entity position="1.2 0 0">
-                <a-gltf-model id="bateria" src="assets/models/bateria.glb" position="0 0.15 0" scale="0.2 0.2 0.2"
-                    rotation="0 0 0" class="clickable" data-component="bateria"
-                    animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear">
-                </a-gltf-model>
-                <a-text value="BATERIA" position="0 -0.12 0" scale="0.22 0.22 0.22" align="center" color="#DC143C"
-                    font="roboto">
-                </a-text>
-                <a-text value="Fuente de voltaje" position="0 -0.24 0" scale="0.14 0.14 0.14" align="center"
-                    color="#FFFFFF" font="roboto">
-                </a-text>
-            </a-entity>
-
-            <!-- Título principal del catálogo -->
-            <a-text value="CATALOGO DE COMPONENTES ELECTRONICOS" position="0 0.65 0" scale="0.28 0.28 0.28"
-                align="center" color="#4CAF50" font="roboto"
-                animation="property: position; to: 0 0.75 0; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine">
-            </a-text>
-
-        </a-marker>
-
-        <!-- Cámara -->
-        <a-entity camera></a-entity>
-    </a-scene>
-
-    <!-- Panel de información (oculto por defecto) -->
-    <div id="info-panel">
-        <h2 id="title"></h2>
-        <div id="content"></div>
-        <button id="close-btn">✖ CERRAR</button>
-    </div>
-
-    <!-- JavaScript -->
-    <script>
-        // ========================================
-        // BASE DE DATOS DE COMPONENTES
-        // ========================================
-        const componentes = {
-            resistencia: {
-                nombre: "🔴 RESISTENCIA",
-                simbolo: "R",
-                descripcion: "Componente pasivo fundamental que se opone al paso de corriente eléctrica, convirtiendo energía eléctrica en calor mediante el efecto Joule.",
-                funcion: "Su función principal es limitar la corriente en un circuito, dividir voltajes entre diferentes puntos, y proteger componentes sensibles del exceso de corriente que podría dañarlos.",
-                especificaciones: `
-                    • Valores típicos: 1Ω hasta 10MΩ (megaohmios)<br>
-                    • Potencia común: 1/8W, 1/4W, 1/2W, 1W, 2W, 5W<br>
-                    • Tolerancia estándar: ±1%, ±5%, ±10%, ±20%<br>
-                    • Tipos: Película de carbón, película metálica, bobinada de alambre<br>
-                    • Coeficiente de temperatura: ±50 a ±200 ppm/°C
-                `,
-                formula: "V = I × R (Ley de Ohm)<br>P = I² × R = V² / R<br>P = V × I",
-                aplicaciones: `
-                    • Limitación de corriente en LEDs y circuitos sensibles<br>
-                    • Divisores de voltaje para sensores y referencias<br>
-                    • Pull-up y pull-down en circuitos digitales<br>
-                    • Protección de componentes semiconductores<br>
-                    • Filtros RC en conjunto con capacitores<br>
-                    • Cargas de prueba y disipación de energía
-                `,
-                extra: "💡 <strong>Dato curioso:</strong> Las bandas de colores en las resistencias (código de colores internacional) permiten identificar su valor y tolerancia sin necesidad de instrumentos de medición. Negro=0, Marrón=1, Rojo=2... hasta Blanco=9."
-            },
-            capacitor: {
-                nombre: "🔵 CAPACITOR (Condensador)",
-                simbolo: "C",
-                descripcion: "Componente pasivo que almacena energía en forma de campo eléctrico entre dos placas conductoras separadas por un material aislante llamado dieléctrico.",
-                funcion: "Almacena y libera carga eléctrica rápidamente, filtra señales separando AC de DC, suaviza fluctuaciones de voltaje en fuentes de alimentación, y bloquea corriente continua mientras permite el paso de corriente alterna.",
-                especificaciones: `
-                    • Capacitancia: desde 1pF (picofaradio) hasta 10,000μF o más<br>
-                    • Voltaje de trabajo: 6.3V, 10V, 16V, 25V, 50V, 100V, 450V<br>
-                    • Tipos: Cerámico, electrolítico, tántalo, poliéster, mica<br>
-                    • Polaridad: Los electrolíticos y tántalo son polarizados (+/-)<br>
-                    • ESR (Resistencia Serie Equivalente): crítica en alta frecuencia
-                `,
-                formula: "Q = C × V<br>E = ½ × C × V²<br>X_C = 1/(2πfC)<br>τ = R × C",
-                aplicaciones: `
-                    • Filtrado en fuentes de poder (suavizar ripple y ruido)<br>
-                    • Acoplamiento y desacoplamiento de señales AC<br>
-                    • Circuitos de temporización junto con resistencias (555)<br>
-                    • Filtros pasa-bajos, pasa-altos, pasa-banda<br>
-                    • Corrección del factor de potencia en AC<br>
-                    • Almacenamiento temporal de energía (flash de cámara)<br>
-                    • Desacople de ruido en circuitos digitales
-                `,
-                extra: "⚡ <strong>Precaución:</strong> Los capacitores electrolíticos pueden explotar violentamente si se conectan con polaridad invertida o si exceden su voltaje nominal. Siempre verificar polaridad antes de soldar."
-            },
-            led: {
-                nombre: "💡 LED (Diodo Emisor de Luz)",
-                simbolo: "LED / D",
-                descripcion: "Semiconductor de estado sólido que emite luz cuando la corriente eléctrica fluye a través de él en la dirección correcta (polarización directa), mediante el fenómeno de electroluminiscencia.",
-                funcion: "Convierte energía eléctrica directamente en luz visible con alta eficiencia energética (90% más eficiente que bombillas incandescentes), sin generar calor significativo ni usar filamentos que se puedan quemar.",
-                especificaciones: `
-                    • Voltaje directo típico (V_f):<br>
-                      - Rojo: 1.8-2.2V | Verde: 2.0-3.5V<br>
-                      - Azul/Blanco: 3.0-3.6V | Infrarrojo: 1.2-1.6V<br>
-                    • Corriente nominal: 20mA (estándar), 350mA-1A (alta potencia)<br>
-                    • Ángulo de emisión: 15° (concentrado) a 120° (difuso)<br>
-                    • Vida útil típica: 50,000 a 100,000 horas<br>
-                    • Tiempo de respuesta: nanosegundos (ideal para comunicación)
-                `,
-                formula: "V_R = V_fuente - V_LED<br>R = (V_fuente - V_LED) / I<br>I_típica = 20mA<br>P = V_LED × I",
-                aplicaciones: `
-                    • Indicadores de estado en equipos electrónicos<br>
-                    • Iluminación general (bombillas LED, tiras LED, paneles)<br>
-                    • Displays de 7 segmentos y matrices de puntos<br>
-                    • Señalización vial, semáforos, pantallas gigantes<br>
-                    • Comunicación óptica (infrarrojos, LiFi, fibra óptica)<br>
-                    • Retroiluminación de pantallas LCD y teclados<br>
-                    • Optoacopladores para aislamiento eléctrico<br>
-                    • Agricultura (iluminación para crecimiento de plantas)
-                `,
-                extra: "🌈 <strong>Tecnología:</strong> Los LEDs blancos en realidad son LEDs azules de alta eficiencia recubiertos con fósforo amarillo (YAG:Ce) que absorbe parte de la luz azul y emite luz amarilla, combinándose para producir luz blanca."
-            },
-            transistor: {
-                nombre: "⚡ TRANSISTOR",
-                simbolo: "Q",
-                descripcion: "Dispositivo semiconductor de tres terminales que puede amplificar señales eléctricas débiles o funcionar como interruptor electrónico ultra-rápido, sin partes móviles ni desgaste mecánico.",
-                funcion: "Controla grandes corrientes con pequeñas señales de entrada (amplificación de potencia), o funciona como switch de estado sólido para conmutar cargas eléctricas a velocidades que pueden alcanzar GHz en aplicaciones de radiofrecuencia.",
-                especificaciones: `
-                    • Tipos principales:<br>
-                      - BJT (Bipolar): NPN y PNP<br>
-                      - FET (Efecto de campo): MOSFET, JFET<br>
-                    • Ganancia de corriente BJT (β o h_FE): 100-800 típico<br>
-                    • Corriente de colector/drenaje: desde mA hasta 100+ Amperes<br>
-                    • Frecuencia de operación: DC hasta varios GHz<br>
-                    • Terminales BJT: Base (B), Colector (C), Emisor (E)<br>
-                    • Terminales MOSFET: Gate (G), Drain (D), Source (S)<br>
-                    • Voltaje de saturación V_CE(sat): ~0.2V (BJT), ~0.1V (MOSFET)
-                `,
-                formula: "I_C = β × I_B (BJT)<br>V_CE(sat) ≈ 0.2V<br>I_D = K × (V_GS - V_th)² (MOSFET)<br>P_diss = V_CE × I_C",
-                aplicaciones: `
-                    • Amplificadores de audio (equipos de sonido, guitarras)<br>
-                    • Amplificadores de radiofrecuencia (transmisores, antenas)<br>
-                    • Switches electrónicos para control de motores y relés<br>
-                    • Osciladores y generadores de señales (relojes, RF)<br>
-                    • Reguladores de voltaje lineales y conmutados<br>
-                    • Circuitos lógicos digitales (TTL, CMOS, microprocesadores)<br>
-                    • Drivers de potencia para LEDs, displays, cargas inductivas<br>
-                    • Conversores DC-DC (boost, buck, inversor)<br>
-                    • Protección de circuitos (corte por sobrecorriente)
-                `,
-                extra: "🚀 <strong>Revolución tecnológica:</strong> El transistor, inventado en 1947 en Bell Labs, es considerado uno de los inventos más importantes del siglo XX. Tu smartphone contiene más de 10 mil millones de transistores en su procesador."
-            },
-            bateria: {
-                nombre: "🔋 BATERÍA (Fuente de Voltaje DC)",
-                simbolo: "V / BAT / E",
-                descripcion: "Dispositivo electroquímico que convierte energía química almacenada en energía eléctrica mediante reacciones redox (reducción-oxidación) reversibles o irreversibles entre sus componentes internos.",
-                funcion: "Proporciona voltaje de corriente continua (DC) constante y energía portátil para alimentar circuitos electrónicos sin necesidad de conexión a la red eléctrica, permitiendo movilidad y autonomía energética.",
-                especificaciones: `
-                    • Voltajes estándar comunes:<br>
-                      - 1.2V (NiMH recargable), 1.5V (Alcalina AA/AAA)<br>
-                      - 3V (CR2032 botón), 3.7V (Li-ion celda)<br>
-                      - 9V (PP3), 12V (baterías de plomo-ácido)<br>
-                    • Capacidad: medida en mAh (miliamperios-hora) o Ah<br>
-                    • Tipos primarios (no recargables): Alcalina, Litio, Zinc-carbón<br>
-                    • Tipos secundarios (recargables): Li-ion, Li-Po, NiMH, NiCd, Plomo-ácido<br>
-                    • Densidad energética: 50-100 Wh/kg (NiMH), 100-265 Wh/kg (Li-ion)<br>
-                    • Ciclos de carga: 300-500 (Li-ion), 500-1000 (NiMH), 200-2000 (LiFePO4)
-                `,
-                formula: "E = V × I × t (Energía en Wh)<br>P = V × I (Potencia)<br>Capacidad (Ah) = I × t<br>Autonomía = Capacidad / Consumo",
-                aplicaciones: `
-                    • Alimentación de dispositivos portátiles (laptops, tablets, teléfonos)<br>
-                    • Sistemas embebidos, microcontroladores y sensores IoT<br>
-                    • Respaldo de energía (UPS, sistemas de alarma, memorias)<br>
-                    • Vehículos eléctricos (autos, motos, bicicletas, scooters)<br>
-                    • Drones, aviones RC y dispositivos de aeromodelismo<br>
-                    • Herramientas eléctricas inalámbricas (taladros, sierras)<br>
-                    • Almacenamiento de energía renovable (solar, eólica)<br>
-                    • Equipos médicos portátiles (marcapasos, monitores)<br>
-                    • Iluminación de emergencia y linternas
-                `,
-                extra: "♻️ <strong>Sostenibilidad:</strong> Las baterías recargables de Li-ion pueden cargarse 300-500 veces, reduciendo significativamente el desperdicio electrónico. Una batería recargable equivale a usar 1000+ baterías desechables, ahorrando recursos y dinero."
-            }
-        };
-
-        // ========================================
-        // REFERENCIAS A ELEMENTOS DEL DOM
-        // ========================================
-        const panel = document.getElementById('info-panel');
-        const title = document.getElementById('title');
-        const content = document.getElementById('content');
-        const closeBtn = document.getElementById('close-btn');
-
-        // ========================================
-        // EVENT LISTENERS
-        // ========================================
-
-        // Cerrar el panel de información
-        closeBtn.addEventListener('click', () => {
-            panel.classList.remove('visible');
-        });
-
-        // Cerrar panel al tocar fuera de él
-        panel.addEventListener('click', (e) => {
-            if (e.target === panel) {
-                panel.classList.remove('visible');
-            }
-        });
-
-        // Setup después de que la página cargue
-        window.addEventListener('load', () => {
-            console.log('✅ Aplicación cargada correctamente');
-
-            // Esperar a que la escena AR esté lista
-            setTimeout(() => {
-                setupInteraction();
-            }, 1500);
-        });
-
-        // ========================================
-        // CONFIGURAR INTERACCIÓN CON MODELOS 3D
-        // ========================================
-        function setupInteraction() {
-            console.log('🎯 Configurando interacción con componentes...');
-
-            const clickables = document.querySelectorAll('.clickable');
-
-            if (clickables.length === 0) {
-                console.warn('⚠️ No se encontraron elementos clickeables');
-                return;
-            }
-
-            console.log(`✅ ${clickables.length} componentes detectados`);
-
-            clickables.forEach((el, index) => {
-                const componentType = el.getAttribute('data-component');
-                console.log(`   ${index + 1}. ${componentType}`);
-
-                // Evento de click/tap
-                el.addEventListener('click', function (evt) {
-                    evt.stopPropagation();
-                    evt.preventDefault();
-
-                    const tipo = this.getAttribute('data-component');
-                    console.log(`🖱️ Click en: ${tipo}`);
-                    mostrarInfo(tipo);
-                });
-
-                // Efecto hover - escala al pasar cursor (desktop)
-                el.addEventListener('mouseenter', function () {
-                    const currentScale = this.getAttribute('scale');
-                    const scaleValue = typeof currentScale === 'object'
-                        ? currentScale.x
-                        : parseFloat(currentScale.split(' ')[0]);
-
-                    const newScale = scaleValue * 1.25;
-                    this.setAttribute('scale', `${newScale} ${newScale} ${newScale}`);
-                });
-
-                el.addEventListener('mouseleave', function () {
-                    const originalScale = 0.2;
-                    this.setAttribute('scale', `${originalScale} ${originalScale} ${originalScale}`);
-                });
-            });
-        }
-
-        // ========================================
-        // MOSTRAR INFORMACIÓN DEL COMPONENTE
-        // ========================================
-        function mostrarInfo(tipo) {
-            const comp = componentes[tipo];
-
-            if (!comp) {
-                console.error(`❌ Componente no encontrado: ${tipo}`);
-                return;
-            }
-
-            console.log(`📄 Mostrando información de: ${comp.nombre}`);
-
-            // Actualizar título
-            title.textContent = comp.nombre;
-
-            // Generar contenido HTML
-            content.innerHTML = `
-                <p><strong>📌 Descripción:</strong><br>${comp.descripcion}</p>
-                
-                <p><strong>⚙️ Función Principal:</strong><br>${comp.funcion}</p>
-                
-                <div class="specs-box">
-                    <strong>📊 Especificaciones Técnicas:</strong><br>
-                    ${comp.especificaciones}
-                </div>
-                
-                <div class="formula">
-                    <strong>📐 Fórmulas Principales:</strong><br>
-                    ${comp.formula}
-                </div>
-                
-                <div class="apps-list">
-                    <strong>💡 Aplicaciones Comunes:</strong><br>
-                    ${comp.aplicaciones}
-                </div>
-                
-                <p style="border-top: 2px dashed #4CAF50; padding-top: 15px; margin-top: 18px; font-style: italic;">
-                    ${comp.extra}
-                </p>
-            `;
-
-            // Mostrar panel con animación
-            panel.classList.add('visible');
-
-            // Scroll al inicio del panel
-            panel.scrollTop = 0;
-        }
-
-        // ========================================
-        // DEBUGGING Y LOGS
-        // ========================================
-        console.log(`
-╔══════════════════════════════════════════════╗
-║   CATÁLOGO AR DE COMPONENTES ELÉCTRICOS     ║
-║   Versión 1.0 - Realidad Aumentada Web      ║
-╚══════════════════════════════════════════════╝
-
-📱 Instrucciones:
-1. Permite acceso a la cámara
-2. Apunta al marcador Hiro
-3. Toca los componentes para ver información
-
-🔧 Componentes disponibles: 5
-   - Resistencia
-   - Capacitor  
-   - LED
-   - Transistor
-   - Batería
-
-💡 Desarrollado con AR.js + A-Frame
-        `);
-    </script>
-
-</body>
-
-</html>
+<!-- RESISTENCIA -->
+<a-entity position="-1.2 0 0">
+    <a-gltf-model 
+        id="resistencia"
+        src="assets/models/resistencia.glb"
+        position="0 0.15 0"
+        scale="0.2 0.2 0.2"
+        rotation="-90 0 0"
+        class="clickable"
+        data-component="resistencia"
+        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
+    </a-gltf-model>
+    <a-text 
+        value="RESISTENCIA" 
+        position="0 -0.12 0" 
+        scale="0.22 0.22 0.22" 
+        align="center" 
+        color="#FFD700"
+        font="roboto">
+    </a-text>
+    <a-text 
+        value="Limita corriente" 
+        position="0 -0.24 0" 
+        scale="0.14 0.14 0.14" 
+        align="center" 
+        color="#FFFFFF"
+        font="roboto">
+    </a-text>
+</a-entity>
+
+<!-- CAPACITOR -->
+<a-entity position="-0.6 0 0">
+    <a-gltf-model 
+        id="capacitor"
+        src="assets/models/capacitor.glb"
+        position="0 0.15 0"
+        scale="0.2 0.2 0.2"
+        rotation="-90 0 0"
+        class="clickable"
+        data-component="capacitor"
+        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
+    </a-gltf-model>
+    <a-text 
+        value="CAPACITOR" 
+        position="0 -0.12 0" 
+        scale="0.22 0.22 0.22" 
+        align="center" 
+        color="#4169E1"
+        font="roboto">
+    </a-text>
+    <a-text 
+        value="Almacena carga" 
+        position="0 -0.24 0" 
+        scale="0.14 0.14 0.14" 
+        align="center" 
+        color="#FFFFFF"
+        font="roboto">
+    </a-text>
+</a-entity>
+
+<!-- LED -->
+<a-entity position="0 0 0">
+    <a-gltf-model 
+        id="led"
+        src="assets/models/led.glb"
+        position="0 0.15 0"
+        scale="0.2 0.2 0.2"
+        rotation="-90 0 0"
+        class="clickable"
+        data-component="led"
+        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
+    </a-gltf-model>
+    <a-text 
+        value="LED" 
+        position="0 -0.12 0" 
+        scale="0.22 0.22 0.22" 
+        align="center" 
+        color="#FF4444"
+        font="roboto">
+    </a-text>
+    <a-text 
+        value="Emite luz" 
+        position="0 -0.24 0" 
+        scale="0.14 0.14 0.14" 
+        align="center" 
+        color="#FFFFFF"
+        font="roboto">
+    </a-text>
+</a-entity>
+
+<!-- TRANSISTOR -->
+<a-entity position="0.6 0 0">
+    <a-gltf-model 
+        id="transistor"
+        src="assets/models/transistor.glb"
+        position="0 0.15 0"
+        scale="0.2 0.2 0.2"
+        rotation="-90 0 0"
+        class="clickable"
+        data-component="transistor"
+        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
+    </a-gltf-model>
+    <a-text 
+        value="TRANSISTOR" 
+        position="0 -0.12 0" 
+        scale="0.22 0.22 0.22" 
+        align="center" 
+        color="#2F4F4F"
+        font="roboto">
+    </a-text>
+    <a-text 
+        value="Amplifica señal" 
+        position="0 -0.24 0" 
+        scale="0.14 0.14 0.14" 
+        align="center" 
+        color="#FFFFFF"
+        font="roboto">
+    </a-text>
+</a-entity>
+
+<!-- BATERÍA -->
+<a-entity position="1.2 0 0">
+    <a-gltf-model 
+        id="bateria"
+        src="assets/models/bateria.glb"
+        position="0 0.15 0"
+        scale="0.2 0.2 0.2"
+        rotation="-90 0 0"
+        class="clickable"
+        data-component="bateria"
+        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
+    </a-gltf-model>
+    <a-text 
+        value="BATERIA" 
+        position="0 -0.12 0" 
+        scale="0.22 0.22 0.22" 
+        align="center" 
+        color="#DC143C"
+        font="roboto">
+    </a-text>
+    <a-text 
+        value="Fuente de voltaje" 
+        position="0 -0.24 0" 
+        scale="0.14 0.14 0.14" 
+        align="center" 
+        color="#FFFFFF"
+        font="roboto">
+    </a-text>
+</a-entity>
