@@ -1,149 +1,465 @@
-<!-- RESISTENCIA -->
-<a-entity position="-1.2 0 0">
-    <a-gltf-model 
-        id="resistencia"
-        src="assets/models/resistencia.glb"
-        position="0 0.15 0"
-        scale="0.2 0.2 0.2"
-        rotation="-90 0 0"
-        class="clickable"
-        data-component="resistencia"
-        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
-    </a-gltf-model>
-    <a-text 
-        value="RESISTENCIA" 
-        position="0 -0.12 0" 
-        scale="0.22 0.22 0.22" 
-        align="center" 
-        color="#FFD700"
-        font="roboto">
-    </a-text>
-    <a-text 
-        value="Limita corriente" 
-        position="0 -0.24 0" 
-        scale="0.14 0.14 0.14" 
-        align="center" 
-        color="#FFFFFF"
-        font="roboto">
-    </a-text>
-</a-entity>
+<!DOCTYPE html>
+<html lang="es">
 
-<!-- CAPACITOR -->
-<a-entity position="-0.6 0 0">
-    <a-gltf-model 
-        id="capacitor"
-        src="assets/models/capacitor.glb"
-        position="0 0.15 0"
-        scale="0.2 0.2 0.2"
-        rotation="-90 0 0"
-        class="clickable"
-        data-component="capacitor"
-        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
-    </a-gltf-model>
-    <a-text 
-        value="CAPACITOR" 
-        position="0 -0.12 0" 
-        scale="0.22 0.22 0.22" 
-        align="center" 
-        color="#4169E1"
-        font="roboto">
-    </a-text>
-    <a-text 
-        value="Almacena carga" 
-        position="0 -0.24 0" 
-        scale="0.14 0.14 0.14" 
-        align="center" 
-        color="#FFFFFF"
-        font="roboto">
-    </a-text>
-</a-entity>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Catálogo AR - Resistencia</title>
 
-<!-- LED -->
-<a-entity position="0 0 0">
-    <a-gltf-model 
-        id="led"
-        src="assets/models/led.glb"
-        position="0 0.15 0"
-        scale="0.2 0.2 0.2"
-        rotation="-90 0 0"
-        class="clickable"
-        data-component="led"
-        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
-    </a-gltf-model>
-    <a-text 
-        value="LED" 
-        position="0 -0.12 0" 
-        scale="0.22 0.22 0.22" 
-        align="center" 
-        color="#FF4444"
-        font="roboto">
-    </a-text>
-    <a-text 
-        value="Emite luz" 
-        position="0 -0.24 0" 
-        scale="0.14 0.14 0.14" 
-        align="center" 
-        color="#FFFFFF"
-        font="roboto">
-    </a-text>
-</a-entity>
+    <!-- Librerías AR.js y A-Frame -->
+    <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
-<!-- TRANSISTOR -->
-<a-entity position="0.6 0 0">
-    <a-gltf-model 
-        id="transistor"
-        src="assets/models/transistor.glb"
-        position="0 0.15 0"
-        scale="0.2 0.2 0.2"
-        rotation="-90 0 0"
-        class="clickable"
-        data-component="transistor"
-        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
-    </a-gltf-model>
-    <a-text 
-        value="TRANSISTOR" 
-        position="0 -0.12 0" 
-        scale="0.22 0.22 0.22" 
-        align="center" 
-        color="#2F4F4F"
-        font="roboto">
-    </a-text>
-    <a-text 
-        value="Amplifica señal" 
-        position="0 -0.24 0" 
-        scale="0.14 0.14 0.14" 
-        align="center" 
-        color="#FFFFFF"
-        font="roboto">
-    </a-text>
-</a-entity>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<!-- BATERÍA -->
-<a-entity position="1.2 0 0">
-    <a-gltf-model 
-        id="bateria"
-        src="assets/models/bateria.glb"
-        position="0 0.15 0"
-        scale="0.2 0.2 0.2"
-        rotation="-90 0 0"
-        class="clickable"
-        data-component="bateria"
-        animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
-    </a-gltf-model>
-    <a-text 
-        value="BATERIA" 
-        position="0 -0.12 0" 
-        scale="0.22 0.22 0.22" 
-        align="center" 
-        color="#DC143C"
-        font="roboto">
-    </a-text>
-    <a-text 
-        value="Fuente de voltaje" 
-        position="0 -0.24 0" 
-        scale="0.14 0.14 0.14" 
-        align="center" 
-        color="#FFFFFF"
-        font="roboto">
-    </a-text>
-</a-entity>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Panel de información */
+        #info-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            display: none;
+            max-width: 650px;
+            margin: 0 auto;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            max-height: 75vh;
+            overflow-y: auto;
+            backdrop-filter: blur(10px);
+        }
+
+        #info-panel.visible {
+            display: block;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #info-panel h2 {
+            color: #4CAF50;
+            margin-top: 0;
+            margin-bottom: 15px;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 12px;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        #info-panel p {
+            line-height: 1.8;
+            margin: 14px 0;
+            font-size: 15px;
+        }
+
+        #info-panel strong {
+            color: #4CAF50;
+            font-size: 16px;
+        }
+
+        /* Caja de fórmulas */
+        .formula {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 18px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 18px 0;
+            font-size: 19px;
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.4);
+            font-weight: 500;
+        }
+
+        /* Caja de especificaciones */
+        .specs-box {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #FF9800;
+            margin: 14px 0;
+            line-height: 2;
+        }
+
+        /* Caja de aplicaciones */
+        .apps-list {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #2196F3;
+            margin: 14px 0;
+            line-height: 2;
+        }
+
+        /* Botón cerrar */
+        #close-btn {
+            background: linear-gradient(135deg, #f44336 0%, #e91e63 100%);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 17px;
+            margin-top: 18px;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        #close-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(244, 67, 54, 0.6);
+        }
+
+        #close-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Instrucciones superiores */
+        #instructions {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            z-index: 999;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: translateX(-50%) scale(1);
+            }
+
+            50% {
+                transform: translateX(-50%) scale(1.05);
+            }
+        }
+
+        /* Scrollbar personalizado */
+        #info-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #info-panel::-webkit-scrollbar-track {
+            background: #2a2a2a;
+            border-radius: 10px;
+        }
+
+        #info-panel::-webkit-scrollbar-thumb {
+            background: #4CAF50;
+            border-radius: 10px;
+        }
+
+        #info-panel::-webkit-scrollbar-thumb:hover {
+            background: #45a049;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            #info-panel {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                padding: 20px;
+                max-height: 65vh;
+            }
+
+            #info-panel h2 {
+                font-size: 22px;
+            }
+
+            #info-panel p {
+                font-size: 14px;
+            }
+
+            .formula {
+                font-size: 16px;
+                padding: 14px;
+            }
+
+            #instructions {
+                font-size: 13px;
+                padding: 12px 20px;
+                top: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Instrucciones -->
+    <div id="instructions">
+        📱 Apunta al marcador Hiro y toca la resistencia para ver información
+    </div>
+
+    <!-- Escena A-Frame con AR.js -->
+    <a-scene embedded
+        arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
+
+        <!-- Marcador Hiro -->
+        <a-marker preset="hiro">
+
+            <!-- RESISTENCIA -->
+            <a-entity position="0 0 0">
+                <a-gltf-model id="resistencia" src="assets/models/resistencia.glb" position="0 0.15 0"
+                    scale="0.3 0.3 0.3" rotation="-90 0 0" class="clickable" data-component="resistencia"
+                    animation="property: rotation; to: -90 360 0; loop: true; dur: 10000; easing: linear">
+                </a-gltf-model>
+
+                <a-text value="RESISTENCIA" position="0 -0.12 0" scale="0.3 0.3 0.3" align="center" color="#FFD700"
+                    font="roboto">
+                </a-text>
+
+                <a-text value="Limita corriente electrica" position="0 -0.24 0" scale="0.18 0.18 0.18" align="center"
+                    color="#FFFFFF" font="roboto">
+                </a-text>
+            </a-entity>
+
+            <!-- Título principal -->
+            <a-text value="CATALOGO AR - COMPONENTE ELECTRONICO" position="0 0.65 0" scale="0.22 0.22 0.22"
+                align="center" color="#4CAF50" font="roboto"
+                animation="property: position; to: 0 0.75 0; dir: alternate; dur: 2000; loop: true; easing: easeInOutSine">
+            </a-text>
+
+        </a-marker>
+
+        <!-- Cámara -->
+        <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- Panel de información (oculto por defecto) -->
+    <div id="info-panel">
+        <h2 id="title"></h2>
+        <div id="content"></div>
+        <button id="close-btn">✖ CERRAR</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ========================================
+        // INFORMACIÓN DE LA RESISTENCIA
+        // ========================================
+        const resistenciaInfo = {
+            nombre: "🔴 RESISTENCIA",
+            simbolo: "R",
+            descripcion: "Componente pasivo fundamental que se opone al paso de corriente eléctrica, convirtiendo energía eléctrica en calor mediante el efecto Joule.",
+            funcion: "Su función principal es limitar la corriente en un circuito, dividir voltajes entre diferentes puntos, y proteger componentes sensibles del exceso de corriente que podría dañarlos.",
+            especificaciones: `
+                • Valores típicos: 1Ω hasta 10MΩ (megaohmios)<br>
+                • Potencia común: 1/8W, 1/4W, 1/2W, 1W, 2W, 5W<br>
+                • Tolerancia estándar: ±1%, ±5%, ±10%, ±20%<br>
+                • Tipos: Película de carbón, película metálica, bobinada de alambre<br>
+                • Coeficiente de temperatura: ±50 a ±200 ppm/°C
+            `,
+            formula: "V = I × R (Ley de Ohm)<br>P = I² × R = V² / R<br>P = V × I",
+            aplicaciones: `
+                • Limitación de corriente en LEDs y circuitos sensibles<br>
+                • Divisores de voltaje para sensores y referencias<br>
+                • Pull-up y pull-down en circuitos digitales<br>
+                • Protección de componentes semiconductores<br>
+                • Filtros RC en conjunto con capacitores<br>
+                • Cargas de prueba y disipación de energía
+            `,
+            extra: "💡 <strong>Dato curioso:</strong> Las bandas de colores en las resistencias (código de colores internacional) permiten identificar su valor y tolerancia sin necesidad de instrumentos de medición. Negro=0, Marrón=1, Rojo=2... hasta Blanco=9."
+        };
+
+        // ========================================
+        // REFERENCIAS A ELEMENTOS DEL DOM
+        // ========================================
+        const panel = document.getElementById('info-panel');
+        const title = document.getElementById('title');
+        const content = document.getElementById('content');
+        const closeBtn = document.getElementById('close-btn');
+
+        // ========================================
+        // EVENT LISTENERS
+        // ========================================
+
+        // Cerrar el panel de información
+        closeBtn.addEventListener('click', () => {
+            panel.classList.remove('visible');
+        });
+
+        // Cerrar panel al tocar fuera de él
+        panel.addEventListener('click', (e) => {
+            if (e.target === panel) {
+                panel.classList.remove('visible');
+            }
+        });
+
+        // Setup después de que la página cargue
+        window.addEventListener('load', () => {
+            console.log('✅ Aplicación cargada correctamente');
+
+            // Esperar a que la escena AR esté lista
+            setTimeout(() => {
+                setupInteraction();
+            }, 1500);
+        });
+
+        // ========================================
+        // CONFIGURAR INTERACCIÓN CON EL MODELO 3D
+        // ========================================
+        function setupInteraction() {
+            console.log('🎯 Configurando interacción con la resistencia...');
+
+            const resistencia = document.getElementById('resistencia');
+
+            if (!resistencia) {
+                console.warn('⚠️ No se encontró el modelo de resistencia');
+                return;
+            }
+
+            console.log('✅ Resistencia detectada');
+
+            // Evento de click/tap
+            resistencia.addEventListener('click', function (evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+
+                console.log('🖱️ Click en resistencia');
+                mostrarInfo();
+            });
+
+            // Efecto hover - escala al pasar cursor (desktop)
+            resistencia.addEventListener('mouseenter', function () {
+                this.setAttribute('scale', '0.35 0.35 0.35');
+            });
+
+            resistencia.addEventListener('mouseleave', function () {
+                this.setAttribute('scale', '0.3 0.3 0.3');
+            });
+        }
+
+        // ========================================
+        // MOSTRAR INFORMACIÓN DE LA RESISTENCIA
+        // ========================================
+        function mostrarInfo() {
+            console.log('📄 Mostrando información de la resistencia');
+
+            // Actualizar título
+            title.textContent = resistenciaInfo.nombre;
+
+            // Generar contenido HTML
+            content.innerHTML = `
+                <p><strong>📌 Descripción:</strong><br>${resistenciaInfo.descripcion}</p>
+                
+                <p><strong>⚙️ Función Principal:</strong><br>${resistenciaInfo.funcion}</p>
+                
+                <div class="specs-box">
+                    <strong>📊 Especificaciones Técnicas:</strong><br>
+                    ${resistenciaInfo.especificaciones}
+                </div>
+                
+                <div class="formula">
+                    <strong>📐 Fórmulas Principales:</strong><br>
+                    ${resistenciaInfo.formula}
+                </div>
+                
+                <div class="apps-list">
+                    <strong>💡 Aplicaciones Comunes:</strong><br>
+                    ${resistenciaInfo.aplicaciones}
+                </div>
+                
+                <p style="border-top: 2px dashed #4CAF50; padding-top: 15px; margin-top: 18px; font-style: italic;">
+                    ${resistenciaInfo.extra}
+                </p>
+            `;
+
+            // Mostrar panel con animación
+            panel.classList.add('visible');
+
+            // Scroll al inicio del panel
+            panel.scrollTop = 0;
+        }
+
+        // ========================================
+        // DEBUGGING Y LOGS
+        // ========================================
+        console.log(`
+╔══════════════════════════════════════════════╗
+║   CATÁLOGO AR - RESISTENCIA                 ║
+║   Versión 1.0 - Realidad Aumentada Web      ║
+╚══════════════════════════════════════════════╝
+
+📱 Instrucciones:
+1. Permite acceso a la cámara
+2. Apunta al marcador Hiro
+3. Toca la resistencia para ver información
+
+🔧 Componente: Resistencia eléctrica
+
+💡 Desarrollado con AR.js + A-Frame
+        `);
+    </script>
+
+</body>
+
+</html>
+```
+
+---
+
+## ✅ CAMBIOS REALIZADOS:
+
+### 1. **Solo un componente:**
+- Eliminados capacitor, LED, transistor y batería
+- Solo queda la **resistencia** centrada en `position="0 0 0"`
+
+### 2. **Modelo más grande:**
+- `scale="0.3 0.3 0.3"` (antes era 0.2)
+- Mejor visibilidad al ser el único componente
+
+### 3. **Textos ajustados:**
+- "Limita corriente eléctrica" debajo del modelo
+- Título actualizado: "CATALOGO AR - COMPONENTE ELECTRONICO"
+
+### 4. **JavaScript simplificado:**
+- Solo una función `mostrarInfo()` sin parámetros
+- Objeto `resistenciaInfo` en lugar de array de componentes
+- Código más limpio y fácil de entender
+
+### 5. **Estructura de carpetas necesaria:**
+```
+proyecto-ar-resistencia/
+│
+├── index.html ← Este código
+│
+└── assets/
+└── models/
+└── resistencia.glb ← Tu modelo 3D
