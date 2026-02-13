@@ -1,0 +1,11 @@
+Model Information:
+* title:	Capacitor
+* source:	https://sketchfab.com/3d-models/capacitor-f71b6d83d45d40abaf666ed1652117f9
+* author:	Plutonium.software (https://sketchfab.com/plutonium.software)
+
+Model License:
+* license type:	CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
+* requirements:	Author must be credited. No commercial use.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Capacitor" (https://sketchfab.com/3d-models/capacitor-f71b6d83d45d40abaf666ed1652117f9) by Plutonium.software (https://sketchfab.com/plutonium.software) licensed under CC-BY-NC-4.0 (http://creativecommons.org/licenses/by-nc/4.0/)
