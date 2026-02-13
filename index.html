@@ -3,154 +3,258 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>AR Tuberías Subterráneas</title>
+    <title>Catálogo AR - Componentes Eléctricos</title>
+    
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    
     <style>
-        #info {
+        body { margin: 0; overflow: hidden; font-family: Arial, sans-serif; }
+        
+        #info-panel {
             position: fixed;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.8);
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.9);
             color: white;
-            padding: 15px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            max-width: 500px;
+            margin: 0 auto;
+            z-index: 1000;
+        }
+        
+        #info-panel.visible { display: block; }
+        
+        #info-panel h2 {
+            color: #4CAF50;
+            margin-top: 0;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        
+        #info-panel p { line-height: 1.6; margin: 10px 0; }
+        
+        .formula {
+            background: #333;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 18px;
+        }
+        
+        #close-btn {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        #instructions {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 15px 25px;
             border-radius: 8px;
-            font-family: Arial;
-            font-size: 14px;
             z-index: 999;
+            text-align: center;
         }
     </style>
 </head>
-<body style="margin: 0; overflow: hidden;">
+<body>
     
-    <div id="info">
-        <strong>🚰 Sistema de Tuberías</strong><br>
-        🔵 Azul: Agua potable<br>
-        🟤 Café: Alcantarillado<br>
-        🟢 Verde: Gas natural<br>
-        ⚫ Negro: Eléctrico
+    <div id="instructions">
+        📱 Apunta al marcador y toca los componentes
     </div>
     
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
         
         <a-marker preset="hiro">
             
-            <!-- AGUA POTABLE (Azul) -->
+            <!-- RESISTENCIA -->
             <a-cylinder 
-                position="0 -0.3 0" 
-                rotation="0 0 90"
-                radius="0.08" 
-                height="2" 
-                color="#00BFFF"
-                opacity="0.8">
-            </a-cylinder>
-            
-            <a-text 
-                value="Agua\n6 pulg\n2.5m prof" 
-                position="1.2 -0.3 0" 
-                scale="0.25 0.25 0.25" 
-                color="#00BFFF">
-            </a-text>
-            
-            <!-- ALCANTARILLADO (Café) -->
-            <a-cylinder 
-                position="0 -0.6 -0.3" 
-                rotation="0 0 90"
-                radius="0.12" 
-                height="2.2" 
-                color="#8B4513"
-                opacity="0.7">
-            </a-cylinder>
-            
-            <a-box 
-                position="-0.5 -0.45 -0.3" 
-                width="0.25" 
-                height="0.25" 
-                depth="0.25"
-                color="#654321">
-            </a-box>
-            
-            <a-text 
-                value="Alcant.\n12 pulg\n3.5m prof" 
-                position="1.2 -0.6 -0.3" 
-                scale="0.25 0.25 0.25" 
-                color="#D2691E">
-            </a-text>
-            
-            <!-- GAS (Verde) -->
-            <a-cylinder 
-                position="0 -0.15 0.3" 
-                rotation="0 0 90"
+                id="resistencia"
+                position="-0.8 0.1 0" 
                 radius="0.05" 
-                height="1.8" 
-                color="#32CD32"
-                opacity="0.8">
-            </a-cylinder>
-            
-            <a-cone 
-                position="0.8 0.05 0.3" 
-                radius-bottom="0.08" 
-                radius-top="0.01" 
-                height="0.15"
-                color="#FFFF00">
-                <a-animation 
-                    attribute="opacity" 
-                    from="0.3" 
-                    to="1" 
-                    dur="800" 
-                    repeat="indefinite"
-                    direction="alternate">
-                </a-animation>
-            </a-cone>
-            
-            <a-text 
-                value="Gas\n2 pulg\n1.2m prof\nPELIGRO" 
-                position="1.2 -0.15 0.3" 
-                scale="0.25 0.25 0.25" 
-                color="#ADFF2F">
-            </a-text>
-            
-            <!-- ELÉCTRICO (Negro) -->
-            <a-cylinder 
-                position="0 -0.5 0.5" 
+                height="0.3"
                 rotation="0 0 90"
-                radius="0.06" 
-                height="1.5" 
-                color="#333333"
-                opacity="0.7">
+                color="#D4AF37"
+                class="clickable"
+                data-component="resistencia">
+                <!-- Bandas de colores -->
+                <a-ring position="0.08 0 0" rotation="0 90 0" radius-inner="0.045" radius-outer="0.055" color="#8B4513"></a-ring>
+                <a-ring position="0.04 0 0" rotation="0 90 0" radius-inner="0.045" radius-outer="0.055" color="#FF0000"></a-ring>
+                <a-ring position="0 0 0" rotation="0 90 0" radius-inner="0.045" radius-outer="0.055" color="#FFD700"></a-ring>
             </a-cylinder>
+            <a-text value="R" position="-0.8 -0.2 0" scale="0.3 0.3 0.3" align="center" color="#FFF"></a-text>
             
-            <a-cylinder 
-                position="0 -0.5 0.52" 
-                rotation="0 0 90"
-                radius="0.02" 
-                height="1.5" 
-                color="#FF0000"
-                opacity="0.5">
-            </a-cylinder>
+            <!-- CAPACITOR -->
+            <a-entity id="capacitor" position="-0.4 0.1 0" class="clickable" data-component="capacitor">
+                <a-box width="0.15" height="0.25" depth="0.05" color="#4169E1"></a-box>
+                <a-box position="0.1 0 0" width="0.05" height="0.25" depth="0.05" color="#1E90FF"></a-box>
+            </a-entity>
+            <a-text value="C" position="-0.4 -0.2 0" scale="0.3 0.3 0.3" align="center" color="#FFF"></a-text>
             
+            <!-- LED -->
+            <a-entity id="led" position="0 0.15 0" class="clickable" data-component="led">
+                <a-cone radius-bottom="0.08" radius-top="0.02" height="0.2" color="#FF4444" opacity="0.8"></a-cone>
+                <a-cylinder position="0 -0.15 0" radius="0.02" height="0.1" color="#C0C0C0"></a-cylinder>
+            </a-entity>
+            <a-text value="LED" position="0 -0.2 0" scale="0.25 0.25 0.25" align="center" color="#FFF"></a-text>
+            
+            <!-- TRANSISTOR -->
+            <a-entity id="transistor" position="0.4 0.1 0" class="clickable" data-component="transistor">
+                <a-box width="0.15" height="0.2" depth="0.1" color="#2F4F4F"></a-box>
+                <a-cylinder position="-0.1 -0.15 0" radius="0.015" height="0.1" color="#FFD700"></a-cylinder>
+                <a-cylinder position="0 -0.15 0" radius="0.015" height="0.1" color="#FFD700"></a-cylinder>
+                <a-cylinder position="0.1 -0.15 0" radius="0.015" height="0.1" color="#FFD700"></a-cylinder>
+            </a-entity>
+            <a-text value="Q" position="0.4 -0.2 0" scale="0.3 0.3 0.3" align="center" color="#FFF"></a-text>
+            
+            <!-- BATERÍA -->
+            <a-entity id="bateria" position="0.8 0.1 0" class="clickable" data-component="bateria">
+                <a-cylinder radius="0.08" height="0.15" color="#DC143C"></a-cylinder>
+                <a-box position="0 0.1 0" width="0.12" height="0.05" depth="0.12" color="#FFD700"></a-box>
+            </a-entity>
+            <a-text value="BAT" position="0.8 -0.2 0" scale="0.25 0.25 0.25" align="center" color="#FFF"></a-text>
+            
+            <!-- Título -->
             <a-text 
-                value="Electric\n220V\n0.8m prof" 
-                position="1.2 -0.5 0.5" 
-                scale="0.25 0.25 0.25" 
-                color="#FFFF00">
+                value="COMPONENTES ELECTRICOS" 
+                position="0 0.5 0" 
+                scale="0.4 0.4 0.4" 
+                align="center" 
+                color="#4CAF50">
             </a-text>
-            
-            <!-- Referencia del suelo -->
-            <a-plane 
-                position="0 0 0" 
-                rotation="-90 0 0"
-                width="3" 
-                height="3" 
-                color="#D2B48C"
-                opacity="0.15">
-            </a-plane>
             
         </a-marker>
         
         <a-entity camera></a-entity>
-        
     </a-scene>
+    
+    <div id="info-panel">
+        <h2 id="title"></h2>
+        <div id="content"></div>
+        <button id="close-btn">Cerrar</button>
+    </div>
+    
+    <script>
+        // Base de datos de componentes
+        const componentes = {
+            resistencia: {
+                nombre: "RESISTENCIA",
+                simbolo: "R",
+                descripcion: "Componente pasivo que se opone al flujo de corriente eléctrica.",
+                funcion: "Limitar la corriente, dividir voltajes, y disipar energía en forma de calor.",
+                especificaciones: "Valores típicos: 10Ω a 10MΩ<br>Potencia: 1/4W, 1/2W, 1W, 2W",
+                formula: "V = I × R (Ley de Ohm)<br>P = I² × R",
+                aplicaciones: "• Limitación de corriente en LEDs<br>• Divisores de voltaje<br>• Pull-up/Pull-down en circuitos digitales"
+            },
+            capacitor: {
+                nombre: "CAPACITOR",
+                simbolo: "C",
+                descripcion: "Componente que almacena energía en forma de campo eléctrico.",
+                funcion: "Almacenar carga eléctrica temporalmente, filtrar señales, y bloquear corriente DC.",
+                especificaciones: "Valores típicos: 1pF a 10000μF<br>Voltaje: 6.3V a 450V",
+                formula: "Q = C × V<br>E = ½ C × V²",
+                aplicaciones: "• Filtros en fuentes de poder<br>• Acoplamiento AC<br>• Circuitos de temporización<br>• Desacople de ruido"
+            },
+            led: {
+                nombre: "LED (Diodo Emisor de Luz)",
+                simbolo: "LED/D",
+                descripcion: "Semiconductor que emite luz cuando circula corriente a través de él.",
+                funcion: "Convertir energía eléctrica en luz visible.",
+                especificaciones: "Voltaje directo: 1.8V-3.6V<br>Corriente típica: 20mA<br>Colores: Rojo, Verde, Azul, Blanco, etc.",
+                formula: "V_LED = V_fuente - (I × R)<br>I = 20mA (típico)",
+                aplicaciones: "• Indicadores de estado<br>• Iluminación<br>• Displays<br>• Comunicación óptica"
+            },
+            transistor: {
+                nombre: "TRANSISTOR (NPN/PNP)",
+                simbolo: "Q",
+                descripcion: "Semiconductor que puede amplificar señales o funcionar como interruptor.",
+                funcion: "Amplificación de señales y conmutación electrónica.",
+                especificaciones: "Tipos: BJT (NPN/PNP), MOSFET<br>Ganancia (β): 100-800<br>Corriente: mA hasta 10A+",
+                formula: "I_C = β × I_B<br>V_CE(sat) ≈ 0.2V",
+                aplicaciones: "• Amplificadores de audio<br>• Switches electrónicos<br>• Control de motores<br>• Osciladores"
+            },
+            bateria: {
+                nombre: "BATERÍA (Fuente DC)",
+                simbolo: "V/BAT",
+                descripcion: "Dispositivo que convierte energía química en energía eléctrica.",
+                funcion: "Proporcionar voltaje constante (DC) al circuito.",
+                especificaciones: "Voltajes comunes: 1.5V, 3V, 3.7V, 9V, 12V<br>Tipos: Alcalina, Li-ion, NiMH",
+                formula: "E = V × I × t<br>P = V × I",
+                aplicaciones: "• Alimentación portátil<br>• Sistemas embebidos<br>• Respaldo de energía<br>• Dispositivos móviles"
+            }
+        };
+        
+        // Referencias DOM
+        const panel = document.getElementById('info-panel');
+        const title = document.getElementById('title');
+        const content = document.getElementById('content');
+        const closeBtn = document.getElementById('close-btn');
+        
+        // Cerrar panel
+        closeBtn.addEventListener('click', () => {
+            panel.classList.remove('visible');
+        });
+        
+        // Setup después de cargar
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                setupInteraction();
+            }, 1000);
+        });
+        
+        function setupInteraction() {
+            const clickables = document.querySelectorAll('.clickable');
+            
+            clickables.forEach(el => {
+                el.addEventListener('click', function(evt) {
+                    evt.stopPropagation();
+                    const tipo = this.getAttribute('data-component');
+                    mostrarInfo(tipo);
+                });
+                
+                // Efecto hover
+                el.addEventListener('mouseenter', function() {
+                    this.setAttribute('scale', '1.2 1.2 1.2');
+                });
+                
+                el.addEventListener('mouseleave', function() {
+                    this.setAttribute('scale', '1 1 1');
+                });
+            });
+        }
+        
+        function mostrarInfo(tipo) {
+            const comp = componentes[tipo];
+            if (!comp) return;
+            
+            title.textContent = comp.nombre;
+            content.innerHTML = `
+                <p><strong>📌 Descripción:</strong><br>${comp.descripcion}</p>
+                <p><strong>⚙️ Función:</strong><br>${comp.funcion}</p>
+                <p><strong>📊 Especificaciones:</strong><br>${comp.especificaciones}</p>
+                <div class="formula"><strong>📐 Fórmulas:</strong><br>${comp.formula}</div>
+                <p><strong>💡 Aplicaciones:</strong><br>${comp.aplicaciones}</p>
+            `;
+            
+            panel.classList.add('visible');
+        }
+    </script>
     
 </body>
 </html>
