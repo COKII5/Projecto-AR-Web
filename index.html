@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Catálogo AR - Resistencia</title>
-
+    <title>Catálogo AR - Capacitor</title>
     <!-- Librerías AR.js y A-Frame -->
     <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
     <style>
         body {
             margin: 0;
             overflow: hidden;
         }
-
         /* Instrucciones superiores */
         #instructions {
             position: fixed;
@@ -34,36 +30,53 @@
         }
     </style>
 </head>
-
 <body>
     <div id="instructions">
         📱 Apunta al marcador Hiro
     </div>
-
+    
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
-
         <a-marker preset="hiro">
-
-            <a-entity position="0 0 0">
-                <a-gltf-model id="resistencia" src="assets/models/capacitor/capacitor.gltf" position="0 0.15 0"
-                    scale="0.001 0.001 0.001" rotation="-90 0 0" </a-gltf-model>
-
-                    <a-text value="CAPACITOR" position="0 -0.12 0" scale="0.3 0.3 0.3" align="center" color="#FFD700">
-                    </a-text>
-
-                    <a-text value="Almacena energia en un campo electrico" position="0 -0.24 0" scale="0.18 0.18 0.18"
-                        align="center" color="#FFFFFF">
-                    </a-text>
-            </a-entity>
-
-            <a-text value="CATALOGO AR - COMPONENTE ELECTRONICO" position="0 0.65 0" scale="0.22 0.22 0.22"
-                align="center" color="#4CAF50">
+            
+            <!-- Modelo 3D del capacitor -->
+            <a-gltf-model 
+                id="capacitor" 
+                src="assets/models/capacitor/capacitor.gltf" 
+                position="0 0 0"
+                scale="0.5 0.5 0.5" 
+                rotation="0 0 0">
+            </a-gltf-model>
+            
+            <!-- Nombre del componente -->
+            <a-text 
+                value="CAPACITOR" 
+                position="0 -0.5 0" 
+                scale="0.5 0.5 0.5" 
+                align="center" 
+                color="#FFD700">
             </a-text>
-
+            
+            <!-- Descripción breve -->
+            <a-text 
+                value="Almacena energia en un campo electrico" 
+                position="0 -0.7 0" 
+                scale="0.3 0.3 0.3"
+                align="center" 
+                color="#FFFFFF">
+            </a-text>
+            
+            <!-- Título principal -->
+            <a-text 
+                value="CATALOGO AR - COMPONENTE ELECTRONICO" 
+                position="0 0.8 0" 
+                scale="0.3 0.3 0.3"
+                align="center" 
+                color="#4CAF50">
+            </a-text>
+            
         </a-marker>
+        
         <a-entity camera></a-entity>
     </a-scene>
-
 </body>
-
 </html>
